@@ -4,8 +4,42 @@
     Author     : Rodrigo
 --%>
 
+<%@page import="db.Disciplinas"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<%
+    String requestError = null;
+    if(request.getParameter("add")!=null){
+        String nome = request.getParameter("nome");
+        String diaDaSemana = request.getParameter("diadasemana");
+        String horario = request.getParameter("horario");
+        int qtAulas = Integer.parseInt(request.getParameter("qtaulas"));
+        try{
+            Disciplinas.addDisciplina(nome, diaDaSemana, horario, qtAulas, 0.0, 0.0);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            requestError = "Falha na criação do disciplina ["+ex.getMessage()+"]";
+        }
+    }else if(request.getParameter("remove")!=null){
+        String nome = request.getParameter("nome");
+        try{
+            Disciplinas.removeDisciplina(nome);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            requestError = "Falha na exclusão do disciplina ["+ex.getMessage()+"]";
+        }
+    }else if(request.getParameter("update")!=null){
+        String nome = request.getParameter("nome");
+        Double notap1 = Double.parseDouble(request.getParameter("notap1"));
+        Double notap2 = Double.parseDouble(request.getParameter("notap2"));
+        try{
+            Disciplinas.updateDisciplina(nome, notap1, notap2);
+            response.sendRedirect(request.getRequestURI());
+        }catch(Exception ex){
+            requestError = "Falha na alteração do disciplina ["+ex.getMessage()+"]";
+        }
+    }
+%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
